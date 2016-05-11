@@ -1,5 +1,5 @@
 
-class sbProfile:
+class sbProfile(object):
     def __init__(self, name=''):
         self.name = name
         self.tireDiameter = -1
@@ -27,7 +27,6 @@ class sbProfile:
         print("Gear Ratios: " + str(self.gearRatios))
         print("Shift Points (RPM): " + str(self.shiftPoints))
         print("Early Warning (RPM): " + str(self.earlyWarning))
-
 
 
 if __name__ == "__main__":
