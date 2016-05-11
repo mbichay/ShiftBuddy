@@ -23,7 +23,8 @@ def createNewProfile(selection):
     profile.summary()
     
     path = os.path.abspath(os.path.normpath(input("\n> Output Directory: ")))
-    save(profile, path)
+    if profile.isGood():  save(profile, path)
+    else: assert(False)
     clear()
     print("[ SB Profile has been saved ]\n\n")
 
