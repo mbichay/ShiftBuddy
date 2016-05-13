@@ -2,32 +2,61 @@ import os
 import pickle
 import glob
 from sbProfile import sbProfile
+import sbProfileExporter as sbPE
+import sbCalculator as sbCalc
 
 
 def createNewProfile(selection):
-     
-    profile = sbProfile(input("> Profile Name: ").strip())
+
+    name = ''
+    while not name:
+        name = input("> Profile Name: ").strip()
+
+    profile = sbProfile(name)
     profile.tireDiameter = parseNumericInput("> Tire Diameter (in): ", 'float')
     profile.gearCount = parseNumericInput("> Gear Count: ", 'int')
     for i in range(0, profile.gearCount):
         profile.gearRatios.append(parseNumericInput("> [Gear " + str(i+1) + "] Overall Ratio: ", 'float'))
-   
+
     if selection == 1:
-        for i in range(0, profile.gearCount): 
+        for i in range(0, profile.gearCount):
             profile.shiftPoints.append(parseNumericInput("> [Gear " + str(i+1) +"] Shift Point (RPM): ", 'float'))
     elif selection == 2:
-        pass
+        definingPointsCount = parseNumericInput(""""\n[ Beginning Torque Curve Analysis ]
+                                                 \n> Defining points describe key information about your vehicle's Tq Curve
+                                                 \n> Enter the amount of defining points you would like to specify
+                                                 \n> --- Tip: Min RPM -> Max RPM and approximately 10 points
+                                                 \n> Amount: """, 'int')
+        definingPoints = {}
+        for i in range(0, definingPointsCount):
+            key = parseNumericInput("\n> [Point " + str(i+1) + "] RPM: ", 'float')
+            value = parseNumericInput("> [Point " + str(i+1) + "] TQ: ", 'float')
+            definingPoints[key] = value
+        profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints)
+        print("\n")
+
+
     else: assert(False)
 
     profile.earlyWarning = parseNumericInput("> Early Warning (RPM): ", 'float')
     clear()
 
     profile.summary()
-    
+
     if profile.isGood():  save(profile, "\n> Output Directory: ")
     else: assert(False)
     clear()
     print("[ SB Profile has been saved ]\n\n")
+
+
+
+
+
+
+
+
+
+
 
 def createNewProfileMenu():
     createMenu = """\
@@ -43,7 +72,7 @@ def createNewProfileMenu():
                1 : createNewProfile,
                2 : createNewProfile,
     }
-    
+
     selection = getMenuOption(createMenu, options)
     options[selection](selection)
     return selection
@@ -51,8 +80,31 @@ def createNewProfileMenu():
 
 
 
+
+
+
+
+
 def exportProfilesMenu():
-    return 0
+    print("[ Export Profiles ]")
+    # input filepath
+    # if files don't exist, fight back and say they don't exist probably?
+    # while loop until user hits 0, adding files to list so long as they don't exist already
+    # if the list isn't empty (which it shouldn't be)
+    # prompt the doofus for a export filepath
+    # Export
+    profiles = []
+    path = ''
+    #should be if this is true....
+    sbPE.export(profiles, path)
+    print ("File export succesful")
+    return
+
+
+
+
+
+
 
 
 
@@ -76,13 +128,19 @@ def getMenuOption(menu, options):
 
 
 
+
+
+
+
+
+
+
 def parseNumericInput(prompt = '', dataType = 'int'):
-    
     dataTypes = {'int' : lambda x: int(x),
                  'float' : lambda x: float(x),
     }
     assert(dataType in dataTypes)
-    
+
     valid = False
     while not valid:
          try:
@@ -92,6 +150,15 @@ def parseNumericInput(prompt = '', dataType = 'int'):
              print("\nInvalid Input: Please enter a value of type " + dataType + "\n")
              continue
     return userInput
+
+
+
+
+
+
+
+
+
 
 
 
@@ -113,6 +180,15 @@ def save(profile, prompt = '', path = None):
             print("\nInvalid path or permission issue. Attempt saving to a different directory")
             if path == None: continue
             assert(False)
+
+
+
+
+
+
+
+
+
 
 
 
@@ -153,6 +229,11 @@ def viewProfiles(selection):
 
 
 
+
+
+
+
+
 def load(prompt = '', path = None):
     loaded = False
     profile = None
@@ -170,6 +251,11 @@ def load(prompt = '', path = None):
             if path == None: continue
             assert(False)
         return profile
+
+
+
+
+
 
 
 
@@ -195,6 +281,15 @@ def viewProfilesMenu():
 
 
 
+
+
+
+
+
+
+
+
+
 def mainMenu():
     mainMenu = """\
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -216,17 +311,37 @@ def mainMenu():
     options[selection]()
     return selection
 
+
+
+
+
+
+
+
+
+
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
+
+
+
+
 
 def main():
     clear()
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("| Shift Buddy Configuration Tool |")
-   
+
     option = mainMenu()
     while (option != 0):
         option = mainMenu()
+
+
+
+
+
 
 if __name__ == "__main__":
     main()
