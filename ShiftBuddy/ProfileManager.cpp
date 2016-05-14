@@ -9,21 +9,22 @@ ProfileManager::ProfileManager()
   
 }
 
-bool ProfileManager::init(short profileNumber)
+bool ProfileManager::init()
 {
-  if (switchProfile(profileNumber) == 1)
-    return true;
-  return false;
+  if (PROFILE_COUNT <= 0)
+    return false;
+  nextProfile();
+  return true;
 }
 
-bool ProfileManager::switchProfile(short profileNumber)
+String ProfileManager::nextProfile()
 {
-  if (profileNumber < PROFILE_COUNT)
+  ++currentProfile;
+  if (currentProfile >= PROFILE_COUNT)
   {
-    currentProfile = profileNumber;
-    return true;
+    currentProfile = 0;
   }
-  return false;
+  return profileName[currentProfile];
 }
 
 unsigned int ProfileManager::currentGearModel(float currentSpeedKPH, int currentRPM)
