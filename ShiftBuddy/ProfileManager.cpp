@@ -3,10 +3,8 @@
 
 #define KPH_TO_IPM 656.168
 
-
 ProfileManager::ProfileManager()
 {
-  
 }
 
 bool ProfileManager::init()
@@ -17,7 +15,7 @@ bool ProfileManager::init()
   return true;
 }
 
-String ProfileManager::nextProfile()
+const String ProfileManager::nextProfile()
 {
   ++currentProfile;
   if (currentProfile >= PROFILE_COUNT)
@@ -27,19 +25,18 @@ String ProfileManager::nextProfile()
   return profileName[currentProfile];
 }
 
-unsigned int ProfileManager::currentGearModel(float currentSpeedKPH, int currentRPM)
+
+const byte ProfileManager::currentGearModel(int& currentSpeedKPH, int& currentRPM) const
 {
-  unsigned int currentGear = 1;
-  
+  byte currentGear = 1;
   if (currentRPM > 0 && currentSpeedKPH == 0)
     return currentGear;
 
-  float ratio = ((PI * tireDiameter[currentProfile]) / (currentSpeedKPH * KPH_TO_IPM) * currentRPM);
-
+  float ratio = ((PI * tireDiameter[currentProfile]) / ((float)currentSpeedKPH * KPH_TO_IPM) * (float)currentRPM);
   
   float min = abs(ratio - gearRatios[currentProfile][0]);
   float diff;
-  for (int gearIdx = 1; gearIdx < gearCount[currentProfile]; ++gearIdx)
+  for (byte gearIdx = 1; gearIdx < gearCount[currentProfile]; ++gearIdx)
   {
     diff = abs(ratio - gearRatios[currentProfile][gearIdx]);
     if (diff <= min)
@@ -51,7 +48,7 @@ unsigned int ProfileManager::currentGearModel(float currentSpeedKPH, int current
   return currentGear;
 }
 
-unsigned int ProfileManager::getShiftPoint(float currentSpeedKPH, int currentRPM)
+const float ProfileManager::getShiftPoint(int& currentSpeedKPH, int& currentRPM) const
 {
   return shiftPoints[currentProfile][currentGearModel(currentSpeedKPH, currentRPM)-1] - earlyWarning[currentProfile];
 }
