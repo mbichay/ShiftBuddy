@@ -27,11 +27,11 @@ def createNewProfile(selection):
                                                  \n> Enter the amount of defining points you would like to specify
                                                  \n> --- Tip: Min RPM -> Max RPM and approximately 10 points
                                                  \n> Amount: """, 'int')
-        definingPoints = {}
+        definingPoints = []
         for i in range(0, definingPointsCount):
-            key = parseNumericInput("\n> [Point " + str(i+1) + "] RPM: ", 'float')
-            value = parseNumericInput("> [Point " + str(i+1) + "] TQ: ", 'float')
-            definingPoints[key] = value
+            rpmX = parseNumericInput("\n> [Point " + str(i+1) + "] RPM: ", 'float')
+            tqY = parseNumericInput("> [Point " + str(i+1) + "] TQ: ", 'float')
+            definingPoints.append((rpmX,tqY))
         profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints)
         print("\n")
 

@@ -1,7 +1,9 @@
+
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+"""
 torque = [172.0, 228.0, 354.0, 360.0, 370.0, 326.0, 230.0, 200.0]
 rpm = [1000.0, 2000.0, 3000.0, 4000.0, 5000.0, 6000.0, 7000.0, 8000.0]
 gearRatios = [13.93, 8.73, 6.25, 4.63, 3.53, 2.79]
@@ -79,8 +81,45 @@ def gettorque(rpmn):
     torqn = torque[n] + (steprpm * dtorque / drpm)
     return torqn
     
+    """
 
 
-def calculateShiftPoints(gearRatios, definingPointsDict):
-    return [6500,6500,6500,6500,6500,6500]
+
+
+def legrangeInterpy(definingPoints, minRPM, maxRPM):
+    tqCurve = []
+    for x in range(minRPM, maxRPM):
+        total=0
+        for k in xrange(len(definingPoints)):
+            xi, yi = definingPoints[k]
+            total_mul = 1
+            for j in xrange(len(definingPoints)):
+                if k == j: continue
+                xj, yj = definingPoints[j]
+                total_mul *= (x - xj) / float(xi - xj)
+            total+= yi * total_mul
+        tqCurve.append((x,total))
+    return tqCurve
+
+
+
+if __name__ == "__main__":
+    minRPM = 1000
+    maxRPM = 8000
+    definingPoints = [(1000.0,172.0), (2000.0,228.0), (3000.0, 354.0), (4000.0, 360.0), (5000.0, 370.0), (6000.0, 326.0), (7000.0, 230.0), (8000.0, 200.0)]
+
+    curve = legrangeInterpy(definingPoints, minRPM, maxRPM)
+    plt.plot(*zip(*curve))
+    plt.plot(*zip(*definingPoints))
+    plt.show()
+    print(curve)
+
+
+
+
+
+
+
+
+
 
