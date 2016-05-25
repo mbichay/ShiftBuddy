@@ -22,16 +22,26 @@ def createNewProfile(selection):
         for i in range(0, profile.gearCount):
             profile.shiftPoints.append(parseNumericInput("> [Gear " + str(i+1) +"] Shift Point (RPM): ", 'float'))
     elif selection == 2:
-        definingPointsCount = parseNumericInput(""""\n[ Beginning Torque Curve Analysis ]
-                                                 \n> Defining points describe key information about your vehicle's Tq Curve
-                                                 \n> Enter the amount of defining points you would like to specify
-                                                 \n> --- Tip: Min RPM -> Max RPM and approximately 10 points
-                                                 \n> Amount: """, 'int')
+
+        minRPM = parseNumericInput("""\n[ Beginning Torque Curve Analysis  ]
+                                   \n> Please enter your vehicle's minimum idle RPM (Generally about 1000)
+                                   \n> Min RPM: """, 'float')
+
+        maxRPM = parseNumericInput("""\n> Now enter your vehicle's maximum RPM (redline RPM)
+                                   \n> Max RPM: """, 'float')
+
+        clear()
+        print("[ Please enter torque values for the given RPMs ]")
         definingPoints = []
-        for i in range(0, definingPointsCount):
-            rpmX = parseNumericInput("\n> [Point " + str(i+1) + "] RPM: ", 'float')
-            tqY = parseNumericInput("> [Point " + str(i+1) + "] TQ: ", 'float')
-            definingPoints.append((rpmX,tqY))
+        rpm = minRPM
+        upperBound  = (int)(maxRPM-minRPM)/500
+        for i in range(0, upperBound):
+            if i == upperBound:
+                rpm = maxRPM
+            tq = parseNumericInput("> [ " + rpm  +" RPM ] Torque: ", 'float')
+            definingPoints.append((rpm, tq))
+            rpm += 500.0
+
         profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints)
         print("\n")
 
