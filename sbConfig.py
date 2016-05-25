@@ -34,11 +34,11 @@ def createNewProfile(selection):
         print("[ Please enter torque values for the given RPMs ]")
         definingPoints = []
         rpm = minRPM
-        upperBound  = (int)(maxRPM-minRPM)/500
-        for i in range(0, upperBound):
+        upperBound  = round(((maxRPM-minRPM)/500))
+        for i in range(0, upperBound+1):
             if i == upperBound:
                 rpm = maxRPM
-            tq = parseNumericInput("> [ " + rpm  +" RPM ] Torque: ", 'float')
+            tq = parseNumericInput("> [ " + str(rpm)  +" RPM ] Torque: ", 'float')
             definingPoints.append((rpm, tq))
             rpm += 500.0
 
@@ -125,7 +125,7 @@ def getMenuOption(menu, options):
     valid = False
     while not valid:
         try:
-            selection = int(input(menu).strip())
+            selection = parseNumericInput(menu, 'int')
             if selection in options:
                 valid = True
             else: print("\nInvalid selection\n")
