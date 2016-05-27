@@ -86,9 +86,9 @@ def gettorque(rpmn):
 
 
 
-def legrangeInterpy(definingPoints, minRPM, maxRPM):
+def legrangeInterpy(definingPoints, min, max):
     curve = []
-    for x in range(minRPM, maxRPM):
+    for x in range(min, max):
         total=0
         for k in xrange(len(definingPoints)):
             xi, yi = definingPoints[k]
@@ -99,7 +99,7 @@ def legrangeInterpy(definingPoints, minRPM, maxRPM):
                 total_mul *= (x - xj) / float(xi - xj)
             total+= yi * total_mul
         curve.append((x,total))
-    return tqCurve
+    return curve
 
 
 
