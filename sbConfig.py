@@ -16,7 +16,14 @@ def createNewProfile(selection):
     profile.tireDiameter = parseNumericInput("> Tire Diameter (in): ", 'float')
     profile.gearCount = parseNumericInput("> Gear Count: ", 'int')
     for i in range(0, profile.gearCount):
-        profile.gearRatios.append(parseNumericInput("> [Gear " + str(i+1) + "] Overall Ratio: ", 'float'))
+        valid = False
+        while not valid:
+            ratio = parseNumericInput("> [Gear " + str(i+1) + "] Overall Ratio: ", 'float')
+            if i >= 1 and ratio >= profile.gearRatios[i-1]:
+                print("Error: Input a gear ratio smaller than the previous")
+            else: valid = True
+        profile.gearRatios.append(ratio)
+
 
     if selection == 1:
         for i in range(0, profile.gearCount):
@@ -34,13 +41,16 @@ def createNewProfile(selection):
         print("[ Please enter torque values for the given RPMs ]")
         definingPoints = []
         rpm = minRPM
-        upperBound  = round(((maxRPM-minRPM)/500))
-        for i in range(0, upperBound+1):
-            if i == upperBound:
+
+        done = False
+        while not done:
+            if rpm >= maxRPM:
                 rpm = maxRPM
+                done = True  
             tq = parseNumericInput("> [ " + str(rpm)  +" RPM ] Torque: ", 'float')
-            definingPoints.append((rpm, tq))
+            definingPoints.append((rpm,tq))
             rpm += 500.0
+
 
         profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints)
         print("\n")
