@@ -4,12 +4,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def calculateShiftPoints(gearRatios, definingPoints):
-    shiftPoints = []
-    torqueCurve = legrangeInterpy(definingPoints)
-    #torqueCurve = linearInterpolation(definingPoints)
-    shiftPoints.append(torqueCurve[len(torqueCurve)-1][0])
+def calculateShiftPoints(gearRatios, definingPoints, interpolationType = 'linear', plot = False):
 
+    if interpolationType == 'legrange':
+        torqueCurve = legrangeInterpolation(definingPoints)
+    else:
+        torqueCurve = linearInterpolation(definingPoints)
+
+    if plot:
+        plt.plot(*zip(*torqueCurve))
+        plt.plot(*zip(*definingPoints))
+        plt.suptitle('Linear vs Legrange Interpolation based on Defining Points')
+        plt.xlabel('Torque (lb-ft)')
+        plt.ylabel('Engine Speed (RPM)')
+        plt.show()
+
+    return optimumShiftPointsAlgorithm(gearRatios, torqueCurve)
+
+
+
+
+def optimumShiftPointsAlgorithm(gearRatios, torqueCurve):
+
+    shiftPoints = []
+    shiftPoints.append(torqueCurve[len(torqueCurve)-1][0])
     for i in range(len(gearRatios)-2, -1, -1):
         minTorqueDrop = 9999999.0
         optimumShiftPt = torqueCurve[len(torqueCurve)-1][0]
@@ -25,12 +43,13 @@ def calculateShiftPoints(gearRatios, definingPoints):
             if (torqueDrop > 0):
                 break
         shiftPoints.append(optimumShiftPt)
-    
     return shiftPoints[::-1]
 
 
 
-def legrangeInterpy(definingPoints):
+
+
+def legrangeInterpolation(definingPoints):
     
     curve = []
     min = definingPoints[0][0]
@@ -48,9 +67,6 @@ def legrangeInterpy(definingPoints):
             total+= yi * total_mul
         curve.append((x,total))
 
-    plt.plot(*zip(*curve))
-    plt.plot(*zip(*definingPoints))
-    plt.show()
     return curve
 
 
@@ -70,9 +86,6 @@ def linearInterpolation(definingPoints):
             torqn = definingPoints[x][1] + (steprpm * dtorq/drpm)
             curve.append((y,torqn))
 
-    plt.plot(*zip(*curve))
-    plt.plot(*zip(*definingPoints))
-    plt.show()
     return curve
 
 
@@ -88,7 +101,7 @@ if __name__ == "__main__":
     final2 = 3.09
     gearRatios = [3.36*final1, 2.09*final1, 1.47*final1, 1.10*final1, 1.11*final2, 0.93*final2]
     definingPoints = [(2500.0, 239.0), (3000.0, 257.5) ,(3500.0, 253.0), (4000.0, 243.8), (4500.0, 248.0), (5000.0, 245.0), (5500.0, 238.0), (6000, 220.0), (6500, 200.0)]
-    print(calculateShiftPoints(gearRatios, definingPoints))
+    print(calculateShiftPoints(gearRatios, definingPoints, 'legrange', True))
 
 
 

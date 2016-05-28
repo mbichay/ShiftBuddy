@@ -29,13 +29,27 @@ def createNewProfile(selection):
         for i in range(0, profile.gearCount):
             profile.shiftPoints.append(parseNumericInput("> [Gear " + str(i+1) +"] Shift Point (RPM): ", 'float'))
     elif selection == 2:
+        
+        menu = """\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| Beginning Torque Curve Analysis |
+| > Choose interpolation schema < |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| 1. legrange                     |
+| 2. linear                       |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+        options = {1 : "legrange",
+                   2 : "linear"
+        }
 
-        minRPM = parseNumericInput("""\n[ Beginning Torque Curve Analysis  ]
-                                   \n> Please enter your vehicle's minimum idle RPM (Generally about 1000)
-                                   \n> Min RPM: """, 'float')
+        interpolationType = getMenuOption(menu, options)
+
+        minRPM = parseNumericInput("""\n> Please enter your vehicle's minimum idle RPM (Generally about 1000) 
+                                      \n> Min RPM: """, 'float')
 
         maxRPM = parseNumericInput("""\n> Now enter your vehicle's maximum RPM (redline RPM)
-                                   \n> Max RPM: """, 'float')
+                                      \n> Max RPM: """, 'float')
 
         clear()
         print("[ Please enter torque values for the given RPMs ]")
@@ -52,7 +66,7 @@ def createNewProfile(selection):
             rpm += 500.0
 
 
-        profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints)
+        profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints, interpolationType)
         print("\n")
 
 
