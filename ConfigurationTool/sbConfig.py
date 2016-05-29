@@ -65,7 +65,6 @@ def createNewProfile(selection):
             definingPoints.append((rpm,tq))
             rpm += 500.0
 
-
         profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints, interpolationType)
         print("\n")
 
@@ -81,12 +80,6 @@ def createNewProfile(selection):
     else: assert(False)
     clear()
     print("[ SB Profile has been saved ]\n\n")
-
-
-
-
-
-
 
 
 
@@ -113,32 +106,69 @@ def createNewProfileMenu():
 
 
 
-
-
-
-
-
-
 def exportProfilesMenu():
+
     print("[ Export Profiles ]")
-    # input filepath
-    # if files don't exist, fight back and say they don't exist probably?
-    # while loop until user hits 0, adding files to list so long as they don't exist already
-    # if the list isn't empty (which it shouldn't be)
-    # prompt the doofus for a export filepath
-    # Export
-    profiles = []
-    path = ''
-    #should be if this is true....
-    sbPE.export(profiles, path)
-    print ("File export succesful")
+    profileDirectory = parseFileDirectoryInput("> Input Profile Directory: ", False)
+    sbFiles = glob.glob(os.path.join(profileDirectory, '*.sb'))
+    selectedProfilePaths = []
+    selectedProfileNames = []
+    
+    done = False
+    while not done:
+        sbProfileExportList = "[ Add Profiles to Export List ]\n"
+        for i in range(0, len(sbFiles)):
+            (tmp, fileName) = os.path.split(sbFiles[i])
+            sbProfileExportList += (str(i+1) + ". " + fileName + "\n")
+        sbProfileExportList += "\n> Selected Profiles: " + str(selectedProfileNames)  + "\n"
+        sbProfileExportList += "\n0. Finish export\n"
+        
+        options = list(range(len(sbFiles)+1))
+        selection = int(getMenuOption(sbProfileExportList, options)) - 1
+        
+        if selection == -1:
+            done = True
+        else:
+            selectedProfilePaths.append(sbFiles[selection])
+            (tmp, fileName) = os.path.split(sbFiles[selection])
+            selectedProfileNames.append(fileName)
+            sbFiles.remove(sbFiles[selection])
+    
+    clear()
+    sbProfiles = []
+    for filepath in selectedProfilePaths:
+        sbProfiles.append(load(None, filepath))
+
+    exportDirectory = parseFileDirectoryInput("""[ Enter ShiftBuddy Directory (Path containing Arduino Files) ]\n
+                                                 > Input ShiftBuddy Folder Path: """, False)
+
+    try: 
+        with open(os.path.join(exportDirectory, 'ProfileManager.h'), 'wb') as profileManagerDotH:
+            profileManagerDotH.write(sbPE.generateProfileManagerHeader(sbProfiles))
+
+    except Exception:
+        print("File permissions issue. Cannot write file to specified directory.")
+        assert(False)
+    clear()
+    print("Export Succesful. You may now upload the ShiftBuddy files to the Arduino.")
     return
 
 
 
-
-
-
+def parseFileDirectoryInput(prompt, tryToCreate):
+    found = False
+    while not found:
+        directory = os.path.abspath(os.path.normpath(input(prompt).strip()))
+        if not os.path.isdir(directory):
+            print("File directory not found")
+            if tryToCreate:
+                print("File Directory not found. Attempting to create.")
+                os.path.makedirs(directory)
+            continue
+        else:
+            found = True
+            clear()
+    return directory
 
 
 
@@ -161,14 +191,6 @@ def getMenuOption(menu, options):
 
 
 
-
-
-
-
-
-
-
-
 def parseNumericInput(prompt = '', dataType = 'int'):
     dataTypes = {'int' : lambda x: int(x),
                  'float' : lambda x: float(x),
@@ -188,24 +210,13 @@ def parseNumericInput(prompt = '', dataType = 'int'):
 
 
 
-
-
-
-
-
-
-
-
 def save(profile, prompt = '', path = None):
     saved = False
     while not saved:
         try:
             if path == None:
-                filepath = os.path.abspath(os.path.normpath(input(prompt).strip()))
+                filepath = parseFileDirectoryInput(prompt, True)
             else: filepath = path
-            if not os.path.isdir(filepath):
-                print("File Directory not found. Attempting to create.")
-                os.makedirs(filepath)
             with open(os.path.join(filepath, profile.name + '.sb'), 'wb') as sbFile:
                 pickle.dump(profile, sbFile, 2)
                 sbFile.close()
@@ -214,14 +225,6 @@ def save(profile, prompt = '', path = None):
             print("\nInvalid path or permission issue. Attempt saving to a different directory")
             if path == None: continue
             assert(False)
-
-
-
-
-
-
-
-
 
 
 
@@ -235,17 +238,7 @@ def viewProfiles(selection):
         return getMenuOption("\n> 0. Back",[0])
 
     elif selection == 2:
-        found = False
-        while not found:
-            profileDirectory = os.path.abspath(os.path.normpath(input("> Input Profile Directory: ")))
-            if not os.path.isdir(profileDirectory):
-                print("File directory not found")
-                continue
-            else:
-                found = True
-                clear()
-
-        sbFiles = glob.glob(os.path.join(profileDirectory, '*.sb'))
+        profileDirectory = parseFileDirectoryInput("> Input Profile Directory: ", False)
         sbFileMenu = "[ Shift Buddy Files ]\n"
         for i in range(0, len(sbFiles)):
             (tmp, fileName) = os.path.split(sbFiles[i])
@@ -260,11 +253,6 @@ def viewProfiles(selection):
             profile.summary()
             getMenuOption("\n> 0. Back", [0])
             selection = int(getMenuOption(sbFileMenu, options)) - 1
-
-
-
-
-
 
 
 
@@ -289,12 +277,6 @@ def load(prompt = '', path = None):
 
 
 
-
-
-
-
-
-
 def viewProfilesMenu():
     viewMenu = """\
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -312,15 +294,6 @@ def viewProfilesMenu():
     selection = getMenuOption(viewMenu, options)
     options[selection](selection)
     return selection
-
-
-
-
-
-
-
-
-
 
 
 
@@ -346,20 +319,8 @@ def mainMenu():
     return selection
 
 
-
-
-
-
-
-
-
-
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
-
-
-
-
 
 
 
@@ -371,10 +332,6 @@ def main():
     option = mainMenu()
     while (option != 0):
         option = mainMenu()
-
-
-
-
 
 
 if __name__ == "__main__":
