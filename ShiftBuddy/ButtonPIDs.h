@@ -1,3 +1,12 @@
+/* These are preset definitions for taking
+ * advantage of the TM1638 buttons available
+ * for program. You can go ahead and switch these
+ * to take advantage of whatever PID you would like,
+ * simply look inside of the OBD.h file and choose a
+ * definition or check Wikipedia and type in the hex
+ * code for your desired PID.
+*/
+
 #ifndef BUTTONPIDS_H
 #define BUTTONPIDS_H
 

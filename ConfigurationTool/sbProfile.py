@@ -1,3 +1,7 @@
+# Author: mbichay@github
+#
+# Description: Profile object for holding all data and metadata
+# about a specific vehicle's profile and characteristics
 
 class sbProfile(object):
     def __init__(self, name=''):

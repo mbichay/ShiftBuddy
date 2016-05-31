@@ -1,3 +1,10 @@
+# Author: mbichay@github
+#
+# Description: Translates sbProfile object values into string form
+# in order to generate a ProfileManager header file to be uploaded
+# to the Arduino. (Export)
+
+# ProfileManager.h
 ProfileManagerDotH = """\
 #include <Arduino.h>
 #ifndef PROFILEMANAGER_H
@@ -27,7 +34,8 @@ const float earlyWarning[PROFILE_COUNT] = {EARLY_WARNING};
 
 
 
-
+# Main callable function from this file, takes an input of a list of sbProfiles
+# and converts the numeric values to strings, then formats them to the header template above
 def generateProfileManagerHeader(sbProfiles):
     
     profileCount = len(sbProfiles)
@@ -38,6 +46,7 @@ def generateProfileManagerHeader(sbProfiles):
     shiftPoints = []
     earlyWarning = []
     
+    # Pull all data from sbProfiles and append to seperate lists
     for profile in sbProfiles:
         profileName.append(profile.name)
         tireDiameter.append(profile.tireDiameter)
@@ -46,10 +55,13 @@ def generateProfileManagerHeader(sbProfiles):
         shiftPoints.append(profile.shiftPoints)
         earlyWarning.append(profile.earlyWarning)
 
+    # Find the max amount of gears out of any of the profiles in order to
+    # back fill the rest of the values with -1s (Convenience for initializing C arrays)
     maxGears = max(gearCount)
     normalize(gearRatios, -1, maxGears)
     normalize(shiftPoints, -1, maxGears)
 
+    # Append string data to formatted header file.
     global ProfileManagerDotH
     formattedProfileManagerDotH = ProfileManagerDotH.format(
             PROFILE_COUNT = profileCount
@@ -62,9 +74,10 @@ def generateProfileManagerHeader(sbProfiles):
             ,EARLY_WARNING = cppBrackets(str(earlyWarning))
             )
     
+    # return the header file in string format.
     return formattedProfileManagerDotH
 
-
+# Adds a value to the end of a list in order for it to meet a required length
 def normalize(lists ,value , length):
 
     for list in lists:
@@ -72,7 +85,7 @@ def normalize(lists ,value , length):
             list.append(value)
     return lists
 
-
+# Swaps brackets into curly braces in a string. Used for intializing C arrays.
 def cppBrackets(string):
     return string.replace('[','{').replace(']','}').replace('\'', '\"')
         

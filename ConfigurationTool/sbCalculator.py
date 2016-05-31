@@ -1,9 +1,15 @@
+# Author: mbichay@github
+#
+# Description: This contains all of the algorithms used for doing interpolation
+# on defining points describing a vehicle's torque curve and doing some analysis on
+# it to determine a good shift point.
 
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+# Wrapper function for calling the interpolation schema and then passing the interpolated data to the
+# optimum shift point algorithm.
 def calculateShiftPoints(gearRatios, definingPoints, interpolationType = 'linear', plot = False):
 
     if interpolationType == 'legrange':
@@ -23,26 +29,48 @@ def calculateShiftPoints(gearRatios, definingPoints, interpolationType = 'linear
 
 
 
-
+# The optimum shift point algorithm looks at the difference in torque between the torque at the vehicle's
+# torque in a current gear and what the torque would be if the vehicle performed an up-shift.
+# Optimum shift point is determined by the point in which the least amount of drop-in-torque occurs.
+# If there is no point before redline, then the algorithm automatically defaults to the shift-point at redline.
 def optimumShiftPointsAlgorithm(gearRatios, torqueCurve):
 
     shiftPoints = []
+
+    # Final gear will always be redline (no gear left to up-shift into)
     shiftPoints.append(torqueCurve[len(torqueCurve)-1][0])
+
+    # For each gear ratio (ignoring the final gear)
     for i in range(len(gearRatios)-2, -1, -1):
         minTorqueDrop = 9999999.0
         optimumShiftPt = torqueCurve[len(torqueCurve)-1][0]
+        # for each point on the torque curve
         for x in range(len(torqueCurve)-1, -1, -1):
+            # calculate the current torque output
             currentGearTQ = torqueCurve[x][1] * gearRatios[i]
+
+            # calculate the RPM change if the car were to up-shift from this current RPM
             nextGearRPM = x * gearRatios[i+1] / gearRatios[i]
+
+            # Calculate the torque at the next gear using the next gear's estimated RPM
             nextGearTQ = torqueCurve[int(math.floor(nextGearRPM))][1] * gearRatios[i+1]
+
+            # Calculate the difference (torque drop)
             torqueDrop = currentGearTQ - nextGearTQ
 
+            # keep track of the min torque drop and the optimum shift point associated.
             if (abs(torqueDrop) < minTorqueDrop):
                 minTorqueDrop = abs(torqueDrop)
                 optimumShiftPt = torqueCurve[x][0]
+
+            # If there are none which are less than zero (IE: You loose torque when shiting)
+            # shift a red-line
             if (torqueDrop > 0):
                 break
+
         shiftPoints.append(optimumShiftPt)
+
+    # Flip the array before returning, all calculations are done backwards.
     return shiftPoints[::-1]
 
 
@@ -87,27 +115,6 @@ def linearInterpolation(definingPoints):
             curve.append((y,torqn))
 
     return curve
-
-
-if __name__ == "__main__":
-
-    #final1 = 4.77
-    #final2 = 3.44
-    #gearRatios = [2.92*final1, 1.83*final1, 1.31*final1, 0.97*final1, 1.04*final2, 0.81*final2]
-    #definingPoints = [(1500.0,172.0), (2000.0,214.0), (2500.0, 305.0), (3000.0, 368.0) ,(3500.0, 385.0), (4000.0, 392.0), (4500.0, 391.0), (5000.0, 382.0), (5500.0, 361.0), (6000, 333.0), (6500, 298.0)]
-    
-    #r32
-    final1 = 3.94
-    final2 = 3.09
-    gearRatios = [3.36*final1, 2.09*final1, 1.47*final1, 1.10*final1, 1.11*final2, 0.93*final2]
-    definingPoints = [(2500.0, 239.0), (3000.0, 257.5) ,(3500.0, 253.0), (4000.0, 243.8), (4500.0, 248.0), (5000.0, 245.0), (5500.0, 238.0), (6000, 220.0), (6500, 200.0)]
-    print(calculateShiftPoints(gearRatios, definingPoints, 'legrange', True))
-
-
-
-
-
-
 
 
 
