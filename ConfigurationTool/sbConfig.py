@@ -139,11 +139,10 @@ def exportProfilesMenu():
     for filepath in selectedProfilePaths:
         sbProfiles.append(load(None, filepath))
 
-    exportDirectory = parseFileDirectoryInput("""[ Enter ShiftBuddy Directory (Path containing Arduino Files) ]\n
-                                                 > Input ShiftBuddy Folder Path: """, False)
+    exportDirectory = parseFileDirectoryInput("[ Enter ShiftBuddy Directory (Path containing Arduino Files) ]\n> Input ShiftBuddy Folder Path: ", False)
 
     try: 
-        with open(os.path.join(exportDirectory, 'ProfileManager.h'), 'wb') as profileManagerDotH:
+        with open(os.path.join(exportDirectory, 'ProfileManager.h'), 'w+') as profileManagerDotH:
             profileManagerDotH.write(sbPE.generateProfileManagerHeader(sbProfiles))
 
     except Exception:
