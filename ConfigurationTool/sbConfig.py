@@ -277,6 +277,8 @@ def viewProfiles(selection):
     # Otherwise, if a user wants to look at a collection of files in a directory, the selection will be 2
     elif selection == 2:
         profileDirectory = parseFileDirectoryInput("> Input Profile Directory: ", False)
+        sbFiles = glob.glob(os.path.join(profileDirectory, '*.sb'))
+        
         sbFileMenu = "[ Shift Buddy Files ]\n"
         for i in range(0, len(sbFiles)):
             (tmp, fileName) = os.path.split(sbFiles[i])
