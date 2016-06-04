@@ -14,7 +14,7 @@ import sbCalculator as sbCalc
 
 # Create new profile logic
 # Allows for manual input of your own profile values as well as autogenerating
-# optimum shift points based on legrange and linear interpolation
+# optimum shift points based on lagrange and linear interpolation
 def createNewProfile(selection):
 
     # The following is required for manual and auto-generated input:
@@ -49,17 +49,17 @@ def createNewProfile(selection):
     # Else if the user is going to use the shift point calculator
     elif selection == 2:
         
-        # Request if they want to try legrange or linear interpolation
+        # Request if they want to try lagrange or linear interpolation
         menu = """\
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 | Beginning Torque Curve Analysis |
 | > Choose interpolation schema < |
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| 1. legrange                     |
+| 1. lagrange                     |
 | 2. linear                       |
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
-        options = {1 : "legrange",
+        options = {1 : "lagrange",
                    2 : "linear"
         }
         interpolationType = options[getMenuOption(menu, options)]

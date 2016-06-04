@@ -12,15 +12,15 @@ import matplotlib.pyplot as plt
 # optimum shift point algorithm.
 def calculateShiftPoints(gearRatios, definingPoints, interpolationType = 'linear', plot = False):
 
-    if interpolationType == 'legrange':
-        torqueCurve = legrangeInterpolation(definingPoints)
+    if interpolationType == 'lagrange':
+        torqueCurve = lagrangeInterpolation(definingPoints)
     else:
         torqueCurve = linearInterpolation(definingPoints)
 
     if plot:
         plt.plot(*zip(*torqueCurve))
         plt.plot(*zip(*definingPoints))
-        plt.suptitle('Linear vs Legrange Interpolation based on Defining Points')
+        plt.suptitle('Linear vs Lagrange Interpolation based on Defining Points')
         plt.xlabel('Torque (lb-ft)')
         plt.ylabel('Engine Speed (RPM)')
         plt.show()
@@ -77,7 +77,7 @@ def optimumShiftPointsAlgorithm(gearRatios, torqueCurve):
 
 
 
-def legrangeInterpolation(definingPoints):
+def lagrangeInterpolation(definingPoints):
     
     curve = []
     min = definingPoints[0][0]
