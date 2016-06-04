@@ -62,7 +62,24 @@ def createNewProfile(selection):
         options = {1 : "legrange",
                    2 : "linear"
         }
-        interpolationType = getMenuOption(menu, options)
+        interpolationType = options[getMenuOption(menu, options)]
+
+
+        # Request if they want to plot the curve or not
+        menu = """\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+|           Plot Curve            |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| 1. Yes                          |
+| 2. No                           |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+	
+        options = {1 : True,
+                   2 : False
+        }
+
+        plot = options[getMenuOption(menu, options)]
 
         # Pull the min and maximum (redline) RPM values
         minRPM = parseNumericInput("""\n> Please enter your vehicle's minimum idle RPM (Generally about 1000) 
@@ -86,7 +103,7 @@ def createNewProfile(selection):
             rpm += 500.0
 
         # Calculate optimum shift points
-        profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints, interpolationType)
+        profile.shiftPoints = sbCalc.calculateShiftPoints(profile.gearRatios, definingPoints, interpolationType, plot)
         print("\n")
 
 
