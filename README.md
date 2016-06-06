@@ -131,10 +131,10 @@
     Here are a list of functions and code which can be changed if you'd like to swap
     outthe hardware:
     1. Read neccecary data:
-      obd.read(PID_SPEED, currentSpeedKPH); - Pull the speed in KPH
-      obd.read(PID_RPM, currentRPM); - Pull the RPM
-      obd.read(currentPID, currentPIDData); - This is only for vanity, ignore if your display
-                                              doesn't output information
+      // obd.read(PID_SPEED, currentSpeedKPH); - Pull the speed in KPH
+      // obd.read(PID_RPM, currentRPM); - Pull the RPM
+      // obd.read(currentPID, currentPIDData); - This is only for vanity, ignore if your display
+      //                                         doesn't output information
     2. Setup() - Modify the setup to use any new display or OBDII reader
     3. Modify ButtonLogic() - For implenting your own button for switching profiles if you'd like
     4. SignalUpshift() - This function Contains all logic for how you want the driver to see
