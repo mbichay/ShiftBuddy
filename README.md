@@ -114,6 +114,20 @@
         I. Enter the folder path to see a list of files and view each one individually
     -------------------------------------------------------------
     -------------------------------------------------------------
+    ----------------- Using the Shift Buddy ---------------------
+    With the spec'd hardware configuration, I've got the 1st button of the Shift Buddy mapped to
+    switch profiles. This will rotate through your list of profiles and display the name of the
+    profile briefly when switching. The other 7 buttons have all been mapped using the 
+    "ButtonPIDs.h" file located in the Shift Buddy folder. Feel free to change/customize these,
+    the options listed are only the few which I thought would be the most interesting, there
+    is a large list of available Hexidecimal codes for you to choose from:
+            https://en.wikipedia.org/wiki/OBD-II_PIDs
+    
+    Once you've selected your profile, you're ready to drive! Petal to the metal and shift up
+    when the Shift Buddy flashes at you. The digital display will display whatever chosen PIDs
+    you choose and the LEDs are an indication on how close you are to the next shift point.
+    -------------------------------------------------------------
+    -------------------------------------------------------------
     -------------------------- Demos ----------------------------
     This was made for my senior capstone project, I've made some demo videos if you'd like
     to see the progress of its design and then a demo/presentation of the actual project.
