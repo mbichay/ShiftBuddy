@@ -19,10 +19,10 @@
     See demo videos located at the bottom of this page for more information.
     -------------------------------------------------------------
     ------------------------ Disclamer -------------------------- 
-    I nor Shift Buddy am responsible for any damage to one's own or other's vehicle.
+    Neither I nor Shift Buddy is responsible for any damage to one's own or other's vehicle.
     I am also not responsible for any injuries or death which may occur when using
     this product and do not condone using this product on public roads.
-    Keep your eyes on the road, user discression is advised.
+    Keep your eyes on the road, user discretion is advised.
     -------------------------------------------------------------
     -------------------------------------------------------------
     ---------------- Software Pre-requisites --------------------
