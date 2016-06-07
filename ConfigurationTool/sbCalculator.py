@@ -87,12 +87,12 @@ def lagrangeInterpolation(definingPoints):
         total=0
         for k in range(len(definingPoints)):
             xi, yi = definingPoints[k]
-            total_mul = 1
+            multiplier = 1
             for j in range(len(definingPoints)):
                 if k == j: continue
                 xj, yj = definingPoints[j]
-                total_mul *= (x - xj) / float(xi - xj)
-            total+= yi * total_mul
+                multiplier *= (x - xj) / float(xi - xj)
+            total+= yi * multiplier
         curve.append((x,total))
 
     return curve
@@ -101,18 +101,15 @@ def lagrangeInterpolation(definingPoints):
 def linearInterpolation(definingPoints):
 
     curve = []
-    min = definingPoints[0][0]
-    max= definingPoints[len(definingPoints)-1][0]
     for x in range(0, len(definingPoints)-1):
         rpmBegin = definingPoints[x][0]
         rpmEnd = definingPoints[x+1][0]
-        for y in np.arange(rpmBegin, rpmEnd+0.05, 0.05):
-            mu2 = (1.0 - math.cos(y*math.pi))/2.0
-            drpm = rpmEnd-rpmBegin
-            dtorq = definingPoints[x+1][1] - definingPoints[x][1]
-            steprpm = y - definingPoints[x][0]
-            torqn = definingPoints[x][1] + (steprpm * dtorq/drpm)
-            curve.append((y,torqn))
+        for rpm in np.arange(rpmBegin, rpmEnd+0.05, 0.05):
+            diffInRPM = rpmEnd-rpmBegin
+            diffInTQ = definingPoints[x+1][1] - definingPoints[x][1]
+            stepSize = rpm - definingPoints[x][0]
+            torque = definingPoints[x][1] + (stepSize * diffInTQ/diffInRPM)
+            curve.append((rpm,torque))
 
     return curve
 
