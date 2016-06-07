@@ -142,7 +142,7 @@
     programming expertise could implement the Shift Buddy using their own hardware.
     (Arduino neccecary). 
     
-    Here are a list of functions and code which can be changed if you'd like to swap
+    Here are a list of functions and code which need to be changed if you'd like to swap
     outthe hardware:
     1. Read neccecary data:
       // obd.read(PID_SPEED, currentSpeedKPH); - Pull the speed in KPH
