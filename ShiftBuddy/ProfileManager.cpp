@@ -4,7 +4,7 @@
  * All measurements are translated from metric to imperial units (sorry).
 */
 
-#include <arduino.h>
+#include <Arduino.h>
 #include "ProfileManager.h"
 
 /* Definition for doing easy kilometers per hour to inches per minute onversions */
