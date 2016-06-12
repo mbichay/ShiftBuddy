@@ -133,7 +133,7 @@
     to see the progress of its design and then a demo/presentation of the actual project.
     1. Very early stages - https://www.youtube.com/watch?v=1jm2bXmtqY0
     2. Stupid commercial (funny) - https://vimeo.com/166303353
-    3. Final demo/presentation - TBD
+    3. Final demo/presentation - https://www.youtube.com/watch?v=lkJdBL0IGbA
     -------------------------------------------------------------
     -------------------------------------------------------------
     ----------------------- Final words -------------------------
